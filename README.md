@@ -1,55 +1,130 @@
-# CP5-Checkpoint-5---DYNAMIC-PROGRAMMING
+# Sistema de Cálculo de Moedas 💰
 
-- Implementação de Programação Dinâmica Bottom-Up para Troco Mínimo (`qtdeMoedasPD`)
+Aplicação em Python para simular e comparar diferentes abordagens de resolução do problema do troco mínimo — encontrar o menor número de moedas necessário para somar um valor alvo.
 
-* **Objetivo do Código**
-  - Calcular a quantidade mínima de moedas para alcançar M com moedas ilimitadas; retornar -1 se impossível.
+O projeto demonstra a aplicação de estratégias algorítmicas (gulosa, recursiva, recursiva com memoização e programação dinâmica) de forma didática e testável via terminal.
 
-* **Escopo**
-  - Validação/normalização de entradas
-  - Checagem de impossibilidade via MDC
-  - DP Bottom-Up com INF = M + 1
-  - Testes de casos típicos e de borda
+## Integrantes
 
-* **Funções Principais**
-  - _validar_normalizar(M, moedas): filtra, deduplica e ordena moedas; trata M < 0
-  - _gcd_lista(nums): calcula MDC do conjunto de moedas
-  - qtdeMoedasPD(M, moedas): resolve com DP e retorna mín. moedas ou -1
+* Abner de Paiva Barbosa - RM558468
+* Fernando Luiz S. Antonio - RM555201
+* Thomas Reichmann - RM554812
 
-* **Ideia do Problema Resolvido**
-  - Minimizar a contagem de moedas para somar exatamente M (combinação, não permutação)
 
-* **Validação e Normalização**
-  - Garante M inteiro; remove não-positivas; deduplica; ordena crescente
+## Requisitos
 
-* **Checagem de Impossibilidade (MDC)**
-  - Se M % gcd(moedas) != 0, retornar -1 sem montar a tabela
+* Python 3.10 ou superior
 
-* **Estratégia de Programação Dinâmica**
-  - *Estado*: dp[i] = mín. moedas para i
-  - *Base*: dp[0] = 0
-  - *Transição*: dp[i] = min(dp[i], dp[i - c] + 1), para cada moeda c e i >= c
-  - *Infinito*: INF = M + 1
+## Funcionalidades
 
-* **Retorno**
-  - Se dp[M] == INF ⇒ -1; caso contrário ⇒ dp[M]
+* **Estratégia Gulosa (Iterativa):**
+    * Seleciona sempre a maior moeda possível até formar (ou não) o valor desejado.
+    * Rápida, mas não garante a solução ótima para todos os conjuntos de moedas.
 
-* **Complexidade**
-  - Tempo: O(M · k), k = quantidade de moedas
-  - Espaço: O(M)
+* **Recursiva Pura:**
+    * Explora todas as combinações possíveis.
+    * Implementação direta do raciocínio matemático, mas com custo exponencial de tempo.
 
-* **Casos Especiais**
-  - M == 0 ⇒ 0
-  - M < 0 ⇒ -1
-  - Lista de moedas vazia/ inválida ⇒-1
+* **Recursiva com Memoização (Top-Down):**
+    * Mantém o raciocínio recursivo, mas armazena resultados intermediários.
+    * Evita recomputações e reduz a complexidade para $O(N \cdot K)$, onde:
+        * $N$ = valor alvo
+        * $K$ = número de moedas
 
-* **Testes Base**
-  - (6, [1, 3, 4]) ⇒ 2
-  - (7, [2, 4]) ⇒ -1
-  - (11, [1, 5, 7]) ⇒ 3
-  - (0, [2, 4]) ⇒ 0
-  - (-5, [1, 2, 5]) ⇒ -1
-  - (14, [4, 6, 8]) ⇒ possível (mdc = 2)
+* **Programação Dinâmica (Bottom-Up):**
+    * Constrói iterativamente soluções de 0 até o valor alvo.
+    * Abordagem mais eficiente e previsível, usada em sistemas reais de otimização.
+    * Trata impossibilidades, retornando -1 quando não há combinação possível.
 
-* **Conclusão**
-  - Solução correta, eficiente e clara; robustez adicional com validação e MDC
+    ## Estrutura do Projeto
+
+```text
+coin-change/
+│
+├── coin_change.py        # implementação principal com todas as funções
+├── README.md             # documentação do projeto
+└── .gitignore            # exclusões padrão (venv, cache, etc.)
+```
+
+## Como Executar 🚀
+
+**1. Clonar o repositório:**
+
+```bash
+git clone [https://github.com/SEU-USUARIO/coin-change.git](https://github.com/SEU-USUARIO/coin-change.git)
+cd coin-change
+```
+**2. Executar o programa:**
+```bash
+python coin_change.py
+```
+
+## Casos de Teste Simulados
+
+```python
+exemplos = [
+    (6,  [1, 3, 4]),   # mínimo esperado: 2 (3+3)
+    (7,  [2, 4]),      # impossível (-1)
+    (11, [1, 5, 7]),   # mínimo esperado: 3 (5+5+1)
+    (0,  [1, 3, 4]),   # 0
+]
+
+```
+## Uso / Exemplo de Saída
+
+```text
+--------------------------------------------------
+Caso 1
+Valor alvo (M): 6
+Moedas: [1, 3, 4]
+  Guloso (não garante ótimo): 3 moeda(s)
+  Recursiva pura (exponencial): 2 moeda(s)
+  Recursiva c/ memo (Top-Down): 2 moeda(s)
+  PD Bottom-Up (ótimo): 2 moeda(s)
+  --> Mínimo encontrado: 2 moeda(s)
+  ```
+
+## Estrutura / Algoritmo
+
+* **`_validate_inputs()`**
+    * Garante entradas válidas e remove moedas duplicadas ou não positivas.
+    * Retorna lista ordenada crescente.
+
+* **`qtdeMoedas()` – Guloso**
+    * Percorre as moedas do maior valor ao menor.
+    * Divide o valor restante pelo valor da moeda atual.
+    * Pode falhar em casos onde a combinação ótima não envolve as maiores moedas.
+
+* **`qtdeMoedasRec()` – Recursiva Pura**
+    * Resolve o problema por decomposição:
+        * `min(qtdeMoedasRec(M - c) + 1)` para cada moeda `c`.
+    * Simples conceitualmente, mas muito custosa.
+
+* **`qtdeMoedasRecMemo()` – Recursiva com Dicionário**
+    * Usa um dicionário (`memo`) para armazenar resultados já calculados.
+    * Mantém a clareza da recursão, mas com desempenho quase linear.
+
+* **`qtdeMoedasPD()` – Programação Dinâmica**
+    * Cria vetor `dp` com tamanho `M + 1`.
+    * Inicializa `dp[0] = 0` e `dp[i] = INF` para os demais.
+    * Atualiza progressivamente:
+        * `dp[i] = min(dp[i], dp[i - moeda] + 1)`
+    * Retorna -1 se `dp[M]` permanece infinito (valor impossível).
+
+## Bloco de Demonstração (Main)
+
+* Itera sobre casos predefinidos e imprime resultados de cada abordagem.
+* Rótulos explicativos indicam a natureza e desempenho de cada método.
+* Indica o melhor resultado encontrado para cada caso.
+* Utiliza apenas concatenação de strings (sem f-strings), mantendo compatibilidade total.
+
+## Conclusão
+
+O projeto exemplifica a evolução de complexidade e eficiência entre métodos para o problema do troco mínimo:
+
+* **Guloso** é rápido, mas não ótimo.
+* **Recursiva pura** é conceitualmente simples, porém ineficiente.
+* **Recursiva com memoização** traz eficiência sem perder clareza.
+* **Programação Dinâmica** é a abordagem ideal para aplicações reais.
+
+A saída organizada e descritiva permite ao usuário comparar os métodos e entender a diferença de desempenho de forma direta e visual.
