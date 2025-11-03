@@ -118,6 +118,28 @@ Moedas: [1, 3, 4]
 * Indica o melhor resultado encontrado para cada caso.
 * Utiliza apenas concatenação de strings (sem f-strings), mantendo compatibilidade total.
 
+## Complexidade (Big O) por Abordagem
+
+- **Guloso (`qtdeMoedas`)**
+  - **Tempo:** O(k log k) para ordenar as moedas + O(k) na varredura ⇒ geralmente O(k log k)
+  - **Espaço:** O(1) adicional
+  - **Observação:** não garante ótimo em sistemas de moedas arbitrários (só em sistemas “canônicos”, ex.: {1,5,10,25}).
+
+- **Recursiva Pura (`qtdeMoedasRec`)**
+  - **Tempo:** Exponencial. No pior caso, O(k^(M/mín_moeda)) (explora quase todas as combinações)
+  - **Espaço:** O(M) pela profundidade da pilha de recursão
+  - **Observação:** didática, mas impraticável para M médio/grande.
+
+- **Recursiva com Memoização / Top-Down (`qtdeMoedasRecMemo`)**
+  - **Tempo:** O(M · k) — cada subproblema 0..M é resolvido no máx. uma vez, testando k moedas
+  - **Espaço:** O(M) para o dicionário de memo + O(M) de pilha (na prática, O(M))
+  - **Observação:** mantém o raciocínio recursivo com custo quase linear em M.
+
+- **Programação Dinâmica Bottom-Up (`qtdeMoedasPD`)**
+  - **Tempo:** O(M · k)
+  - **Espaço:** O(M)
+  - **Observação:** costuma ser a opção mais previsível/estável; fácil de justificar e testar.
+
 ## Conclusão
 
 O projeto exemplifica a evolução de complexidade e eficiência entre métodos para o problema do troco mínimo:
